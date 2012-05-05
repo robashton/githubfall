@@ -1,7 +1,7 @@
 #container {
   -webkit-transform-origin: 0px 0px;
   -webkit-transform: scale(1.0);
-  -webkit-transition: -webkit-transform 2s linear;
+  -webkit-transition: -webkit-transform 0.5s linear;
   width: auto;
 }
 
@@ -12,7 +12,7 @@
 }
 
 .bucket h1 {
-  font-size: 64px;
+  font-size: 100px;
 }
 
 .bucket div {
@@ -21,4 +21,22 @@
 
 .bucket img {
   width: 145px;
+}
+
+#dialog-container {
+  position: absolute;
+}
+
+
+
+#event-display {
+  position: relative;
+  background-color: #FFF;
+  border: 1px solid #000;
+  -webkit-box-shadow: 3px 3px 4px #000;
+}
+
+#event-display span {
+  display: block;
+  margin-bottom: 3px;
 }

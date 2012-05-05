@@ -5,6 +5,32 @@
 
   <script type="text/javascript">
 
+    var showEvent = function(event, x, y) {
+      var display = $('#event-display');
+      display.css({
+        left: x + 'px',
+        top: y + 'px'
+      });
+      display.find('.author').text(event.actor.login);
+
+      var commitscontainer = display.find('.commits');
+      commitscontainer.html('');
+      for(var i in event.payload.commits) {
+        var commit = event.payload.commits[i];
+        commitscontainer.append($('<span/>').text(commit.message));
+      }
+      $('#event-display').show();
+    }
+
+    var onElementMouseEnter = function(e) {
+      var event = $(this).data('event');
+      showEvent(event, e.pageX, e.pageY);
+    };
+
+    var onElementMouseLeave = function(e) {
+       $('#event-display').hide();
+    };
+
     var Bucket = function(element) {
       this.element = element;
       this.events = [];
@@ -14,6 +40,8 @@
         var html = this.createEventHtml(event);
         this.events.push(event);
         this.element.append(html);
+        html.on('mouseenter', onElementMouseEnter);
+        html.on('mouseleave', onElementMouseLeave);
       },
       count: function() {
         return this.events.length;
@@ -36,7 +64,7 @@
                           .append($('<p/>').text(data.actor.login))
                           .append($('<img/>').attr('src', data.actor.avatar_url))
                       );
-
+        element.data('event', data);
         return element;
       }
     };
@@ -98,22 +126,30 @@
         var bucket = buckets[i];
         var bucketHeight = bucket.height();
         containerHeight = Math.max(containerHeight,  bucketHeight);
-        containerWidth += 600;
+        containerWidth += bucket.width();
       }
 
-      container.css('width', containerWidth + 100 + 'px');
+      container.css('width', containerWidth + 600 + 'px');
       var x = doc.width() / containerWidth;
       var y = doc.height() / containerHeight;
       var scale = Math.min(x, y);
       container.css('-webkit-transform', 'scale(' + scale + ')'); 
     };
 
-    setInterval(recalculateScale, 2000);
+    setInterval(recalculateScale, 500);
 
   </script>
   <body>
     <div id="container">
 
+    </div>
+    <div id="dialog-container">
+      <div id="event-display">
+        <h4 class="author"></h4>
+        <div class="commits">
+
+        </div>
+      </div>
     </div>
   </body>
 </html>
