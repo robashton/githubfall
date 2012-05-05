@@ -22,9 +22,35 @@ var server = http.createServer(function(req, res) {
 var io = socketio.listen(server);
 server.listen(PORT);
 
+var fetchRepoInfo = function(name, cb) {
+ var request = https.get({ host: 'api.github.com', path: '/repos/' + name}, function(res) {
+    var data = '';
+    res.on('data', function (chunk) {
+      data += chunk;
+    });
+    res.on('end', function() {
+      cb(JSON.parse(data));
+    });
+  }).on('error', function(e) {
+    console.error(e);
+  });
+};
+
+var createDataFromPushEvent = function(data, cb) {
+  fetchRepoInfo(data.repo.name, function(repo) {
+    cb({
+      language: repo.language,
+      actor: data.actor,
+      payload: data.payload
+    });
+  });
+};
+
 var eventHandlers = {
   "PushEvent": function(event) {
-    io.sockets.emit('push', event);
+    createDataFromPushEvent(event, function(data) {
+      io.sockets.emit('push', data);
+    });
   }
 }
 
