@@ -1,18 +1,62 @@
 <html>
   <script type="text/javascript" src="socket.io/socket.io.js"></script>
   <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css"></script>
+
   <script type="text/javascript">
+
+    var getBucketForLanguage = function(language, cb) {
+      language = language || 'Unknown';
+      var bucket = $('#' + language);
+      if(bucket.length > 0) return cb(bucket);
+
+
+      bucket = $('<div/>')
+                .attr('id', language)
+                .addClass('bucket');
+
+      bucket.append($('<h1/>')
+                       .text(language)
+                   );
+
+      $('#container').append(bucket);
+      return cb(ele);
+    };
+
+    var createHtmlForPush = function(data) {
+      var element = $('<div />')
+                      .addClass('push');
+
+      element.append($('<div/>')
+                      .addClass('author')
+                        .append($('<p/>').text(data.actor.login))
+                        .append($('<img/>').attr('src', data.actor.avatar_url))
+                    );
+
+      var commitsContainer = $('<div/>')
+                      .addClass('commits');
+      for(var i in data.payload.commits) {
+        var commit = data.payload.commits[i];
+        commitsContainer.append($('<div/>')
+                                  .text(commit.message)
+                               );
+      }
+      return element;
+    };
+
+    var appendItemToDocument = function(data) {
+      getBucketForLanguage(data.language, function(bucket) {
+        bucket.append(createHtmlForPush(data));
+      });
+    };
+
     $(document).ready(function(){
      var socket = io.connect();
-     var output = $('#temp');
-
-      socket.on('push', function (data) {
-         output.append($('<p/>').text(JSON.stringify(data)));
-      });
+      socket.on('push', appendItemToDocument);
     });
   </script>
   <body>
-    <div id="temp">
+    <div id="container">
 
     </div>
   </body>
