@@ -1,8 +1,24 @@
 #container {
-  
+  -webkit-transform-origin: 0px 0px;
+  -webkit-transform: scale(1.0);
+  -webkit-transition: -webkit-transform 2s linear;
+  width: auto;
 }
 
 .bucket {
   float: left;
-  width: 100px;
+  width: 600px;
+  margin-left: 10px;
+}
+
+.bucket h1 {
+  font-size: 64px;
+}
+
+.bucket div {
+  float: left;
+}
+
+.bucket img {
+  width: 145px;
 }

@@ -5,10 +5,49 @@
 
   <script type="text/javascript">
 
+    var Bucket = function(element) {
+      this.element = element;
+      this.events = [];
+    };
+    Bucket.prototype = {
+      add: function(event) {
+        var html = this.createEventHtml(event);
+        this.events.push(event);
+        this.element.append(html);
+      },
+      count: function() {
+        return this.events.length;
+      },
+      height: function() {
+        return this.element.height(); // for now
+      },
+      width: function() {
+        return this.element.width(); 
+      },
+      setItemCountHorizontal: function(count) {
+        this.element.css('width', count * 150 + 'px');
+      },
+      createEventHtml: function(data) {
+        var element = $('<div />')
+                        .addClass('push');
+
+        element.append($('<div/>')
+                        .addClass('author')
+                          .append($('<p/>').text(data.actor.login))
+                          .append($('<img/>').attr('src', data.actor.avatar_url))
+                      );
+
+        return element;
+      }
+    };
+
+    var buckets = {};
+    var bucketCount = 0;
+
     var getBucketForLanguage = function(language, cb) {
       language = language || 'Unknown';
-      var bucket = $('#' + language);
-      if(bucket.length > 0) return cb(bucket);
+      var bucket = buckets[language];
+      if(bucket) return cb(bucket);
 
 
       bucket = $('<div/>')
@@ -20,33 +59,15 @@
                    );
 
       $('#container').append(bucket);
-      return cb(ele);
-    };
+      buckets[language] = new Bucket(bucket);
+      bucketCount++;
 
-    var createHtmlForPush = function(data) {
-      var element = $('<div />')
-                      .addClass('push');
-
-      element.append($('<div/>')
-                      .addClass('author')
-                        .append($('<p/>').text(data.actor.login))
-                        .append($('<img/>').attr('src', data.actor.avatar_url))
-                    );
-
-      var commitsContainer = $('<div/>')
-                      .addClass('commits');
-      for(var i in data.payload.commits) {
-        var commit = data.payload.commits[i];
-        commitsContainer.append($('<div/>')
-                                  .text(commit.message)
-                               );
-      }
-      return element;
+      return cb(bucket);
     };
 
     var appendItemToDocument = function(data) {
       getBucketForLanguage(data.language, function(bucket) {
-        bucket.append(createHtmlForPush(data));
+        bucket.add(data);
       });
     };
 
@@ -54,6 +75,41 @@
      var socket = io.connect();
       socket.on('push', appendItemToDocument);
     });
+
+    var recalculateScale = function() {
+      var container = $('#container');
+      var doc = $(window);
+
+      var containerHeight = 0;
+      var containerWidth = 0;
+      var totalItems = 0;
+
+      for(var i in buckets) {
+        var bucket = buckets[i];
+        totalItems += bucket.count();
+      }
+      if(totalItems === 0) return;
+
+      // var idealForSquare = Math.sqrt(totalItems);
+      // console.log(idealForSquare);
+      // var widthPerColumn = Math.max(Math.floor(idealForSquare), 1);
+
+      for(var i in buckets) {
+        var bucket = buckets[i];
+        var bucketHeight = bucket.height();
+        containerHeight = Math.max(containerHeight,  bucketHeight);
+        containerWidth += 600;
+      }
+
+      container.css('width', containerWidth + 100 + 'px');
+      var x = doc.width() / containerWidth;
+      var y = doc.height() / containerHeight;
+      var scale = Math.min(x, y);
+      container.css('-webkit-transform', 'scale(' + scale + ')'); 
+    };
+
+    setInterval(recalculateScale, 2000);
+
   </script>
   <body>
     <div id="container">

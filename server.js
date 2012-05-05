@@ -66,8 +66,8 @@ var processData = function(data) {
     processEvent(eventArray[i]);
 };
 
-setInterval(function() {
-  var request = https.get({ host: 'api.github.com', path: '/events'}, function(res) {
+var downloadEvents = function() {
+ var request = https.get({ host: 'api.github.com', path: '/events'}, function(res) {
     var data = '';
     res.on('data', function (chunk) {
       data += chunk;
@@ -78,4 +78,6 @@ setInterval(function() {
   }).on('error', function(e) {
     console.error(e);
   });
-}, 5000);
+};
+
+setInterval(downloadEvents, 10000);
