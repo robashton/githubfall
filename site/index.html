@@ -1,0 +1,19 @@
+<html>
+  <script type="text/javascript" src="socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+     var socket = io.connect();
+     var output = $('#temp');
+
+      socket.on('push', function (data) {
+         output.append($('<p/>').text(JSON.stringify(data)));
+      });
+    });
+  </script>
+  <body>
+    <div id="temp">
+
+    </div>
+  </body>
+</html>

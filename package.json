@@ -1,0 +1,9 @@
+{
+  "name": "Githubfall",
+  "version": "1.0.0",
+  "dependencies": {
+    "paperboy": "",
+    "socket.io": "",
+    "underscore": ""
+  }
+}
