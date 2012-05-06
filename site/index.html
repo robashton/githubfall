@@ -1,10 +1,11 @@
 <html>
-  <script type="text/javascript" src="socket.io/socket.io.js"></script>
-  <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
-  <script type="text/javascript" src="hammer.js"></script>
-  <link rel="stylesheet" type="text/css" href="style.css"></script>
+  <head>
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="hammer.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"></script>
 
-  <script type="text/javascript">
+    <script type="text/javascript">
 
     var BUCKET_WIDTH = 600;
     var lastScale = 1.0;
@@ -143,49 +144,66 @@
         mouseIsInside=false;
       });
 
-      $("body").click(function(){ 
+      var bodyHammer = new Hammer(document.body);
+      bodyHammer.ontap = function() {
         if (!mouseIsInside)
           hideEvent();
-      });
+      };
     });
 
-    var recalculateScale = function() {
-      var container = $('#container');
-      var doc = $(window);
+     var recalculateScale = function() {
+        var container = $('#container');
+        var doc = $(window);
 
-      var containerHeight = 0;
-      var containerWidth = 0;
-      var totalItems = 0;
+        var containerHeight = 0;
+        var containerWidth = 0;
+        var totalItems = 0;
 
-      for(var i in buckets) {
-        var bucket = buckets[i];
-        totalItems += bucket.count();
-      }
-      if(totalItems === 0) return;
+        for(var i in buckets) {
+          var bucket = buckets[i];
+          totalItems += bucket.count();
+        }
+        if(totalItems === 0) return;
 
-      for(var i in buckets) {
-        var bucket = buckets[i];
-        var bucketHeight = bucket.height();
-        containerHeight = Math.max(containerHeight,  bucketHeight);
-        containerWidth += bucket.width();
-      }
-      containerWidth += BUCKET_WIDTH; 
+        for(var i in buckets) {
+          var bucket = buckets[i];
+          var bucketHeight = bucket.height();
+          containerHeight = Math.max(containerHeight,  bucketHeight);
+          containerWidth += bucket.width();
+        }
+        containerWidth += BUCKET_WIDTH; 
 
-      var x = doc.width() / containerWidth;
-      var y = doc.height() / containerHeight;
-      var scale = Math.min(x, y);
-      scale = Math.min(scale, 0.3);
+        var x = doc.width() / containerWidth;
+        var y = doc.height() / containerHeight;
+        var scale = Math.min(x, y);
+        scale = Math.min(scale, 0.3);
 
-      var scaleDifference = lastScale - scale;
-      if(scaleDifference < 0.05) return;
+        var scaleDifference = lastScale - scale;
+        if(Math.abs(scaleDifference) < 0.05) return;
 
-      lastScale = scale;
-      container.css('-webkit-transform', 'scale(' + scale + ')'); 
-    };
+        lastScale = scale;
+        container.css({
+          '-webkit-transform': 'scale(' + scale + ')',
+          '-moz-transform': 'scale(' + scale + ')',
+        }); 
+      };
 
-    setInterval(recalculateScale, 300);
+      setInterval(recalculateScale, 500);
 
-  </script>
+    </script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11207442-11']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
   <body>
     <h1 class="title">Github Live</h1>
     <div id="outerContainer">
