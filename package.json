@@ -4,6 +4,8 @@
   "dependencies": {
     "paperboy": "",
     "socket.io": "",
-    "underscore": ""
+    "underscore": "",
+    "uglify-js": "",
+    "active-x-obfuscator": ""
   }
 }
