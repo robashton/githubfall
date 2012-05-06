@@ -6,6 +6,7 @@
   <script type="text/javascript">
 
     var BUCKET_WIDTH = 600;
+    var lastScale = 1.0;
 
     var showEvent = function(event, x, y) {
       var display = $('#event-display');
@@ -139,6 +140,10 @@
       var scale = Math.min(x, y);
       scale = Math.min(scale, 0.3);
 
+      var scaleDifference = lastScale - scale;
+      if(scaleDifference < 0.01) return;
+
+      lastScale = scale;
       container.css('-webkit-transform', 'scale(' + scale + ')'); 
     };
 
