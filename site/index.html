@@ -137,7 +137,7 @@
       var x = doc.width() / containerWidth;
       var y = doc.height() / containerHeight;
       var scale = Math.min(x, y);
-      if(scale > 1) return;
+      scale = Math.min(scale, 0.3);
 
       container.css('-webkit-transform', 'scale(' + scale + ')'); 
     };
