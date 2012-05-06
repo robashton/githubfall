@@ -1,12 +1,47 @@
 <html>
   <script type="text/javascript" src="socket.io/socket.io.js"></script>
   <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="hammer.js"></script>
   <link rel="stylesheet" type="text/css" href="style.css"></script>
 
   <script type="text/javascript">
 
     var BUCKET_WIDTH = 600;
     var lastScale = 1.0;
+    var selectedItem = null;
+
+    var hideEvent = function() {
+      if(!selectedItem) return;
+      $('#event-display').hide();
+      selectedItem.removeClass('selected');
+      selectedItem = null;
+    }
+
+    var showEvent = function(element, x, y) {
+      hideEvent();
+      var display = $('#event-display');
+      var event = element.data('event');
+
+      display.css({
+        left: x + 'px',
+        top: y + 'px'
+      });
+      display.find('.author').text(event.actor.login);
+
+      var commitscontainer = display.find('.commits');
+      commitscontainer.html('');
+      for(var i in event.payload.commits) {
+        var commit = event.payload.commits[i];
+        commitscontainer.append($('<span/>').text(commit.message));
+      }
+      selectedItem = element;
+      selectedItem.addClass('selected');
+      display.show();
+    };
+
+    var onElementSelected = function(e) {
+      showEvent(this.element, e.position[0].x, e.position[0].y);
+    };
 
     var Bucket = function(element) {
       this.element = element;
@@ -18,6 +53,9 @@
         this.events.push(event);
         this.element.append(html);
         this.highlightItem(html);
+        var hammer = new Hammer(html.get(0));
+        hammer.element = html;
+        hammer.ontap = onElementSelected;
       },
       count: function() {
         return this.events.length;
@@ -131,11 +169,11 @@
       <div id="container">
 
       </div>
-      <div id="dialog-container">
-        <div id="event-display">
-          <h4 class="author"></h4>
-          <div class="commits">
-          </div>
+    </div>
+    <div id="dialog-container">
+      <div id="event-display">
+        <h4 class="author"></h4>
+        <div class="commits">
         </div>
       </div>
     </div>
