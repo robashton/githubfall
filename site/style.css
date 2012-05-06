@@ -16,6 +16,10 @@ body {
   -webkit-transform: scale(1.0);
   -webkit-transition: -webkit-transform 0.5s linear;
   -webkit-backface-visibility: hidden;
+  -moz-transform-origin: 0px 0px;
+  -moz-transform: scale(1.0);
+  -moz-transition: -moz-transform 0.5s linear;
+  -moz-backface-visibility: hidden;
 }
 
 .bucket {
@@ -52,15 +56,20 @@ h1.title {
 .push {
   -webkit-transition: -webkit-transform 0.5s linear;
   -webkit-backface-visibility: hidden;
+  -moz-transition: -moz-transform 0.5s linear;
+  -moz-backface-visibility: hidden;
   cursor: pointer;
 }
 
 .fresh {
   -webkit-transform: scale(0.001);
+  -moz-transform: scale(0.001);
 }
 
 .shadow img {
   box-shadow: 3px 3px 10px 5px #F3F781;
+  -webkit-box-shadow: 3px 3px 10px 5px #F3F781;
+  -moz-box-shadow: 3px 3px 10px 5px #F3F781;
 }
 
 .fresh img {
@@ -69,8 +78,10 @@ h1.title {
 
 .selected {
   -webkit-transform-origin: 90% 90%;
+  -moz-transform-origin: 90% 90%;
   z-index: -10;
   -webkit-transform: scale(2.0);
+  -moz-transform: scale(2.0);
 }
 
 #dialog-container {
@@ -88,7 +99,9 @@ h1.title {
   width: 400px;
   border: 1px solid #EEE;
   -webkit-box-shadow: 3px 3px 4px #000;
-   border-radius: 15px;
+  -moz-box-shadow: 3px 3px 4px #000;
+  box-shadow: 3px 3px 4px #000;
+  border-radius: 15px;
   -moz-border-radius: 15px;
   padding: 10px 10px 10px 10px;
   pointer-events: all;

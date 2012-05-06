@@ -164,7 +164,10 @@
         if(scaleDifference < 0.01) return;
 
         lastScale = scale;
-        container.css('-webkit-transform', 'scale(' + scale + ')'); 
+        container.css({
+          '-webkit-transform': 'scale(' + scale + ')',
+          '-moz-transform': 'scale(' + scale + ')',
+        }); 
       };
 
       setInterval(recalculateScale, 500);
