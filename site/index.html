@@ -1,174 +1,188 @@
 <html>
-  <script type="text/javascript" src="socket.io/socket.io.js"></script>
-  <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
-  <script type="text/javascript" src="hammer.js"></script>
-  <link rel="stylesheet" type="text/css" href="style.css"></script>
+  <head>
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="hammer.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"></script>
 
-  <script type="text/javascript">
+    <script type="text/javascript">
 
-    var BUCKET_WIDTH = 600;
-    var lastScale = 1.0;
-    var selectedItem = null;
+      var BUCKET_WIDTH = 600;
+      var lastScale = 1.0;
+      var selectedItem = null;
 
-    var hideEvent = function() {
-      if(!selectedItem) return;
-      $('#event-display').hide();
-      selectedItem.removeClass('selected');
-      selectedItem = null;
-    }
+      var hideEvent = function() {
+        if(!selectedItem) return;
+        $('#event-display').hide();
+        selectedItem.removeClass('selected');
+        selectedItem = null;
+      }
 
-    var showEvent = function(element, x, y) {
-      hideEvent();
-      var display = $('#event-display');
-      var event = element.data('event');
+      var showEvent = function(element, x, y) {
+        hideEvent();
+        var display = $('#event-display');
+        var event = element.data('event');
 
-      display.css({
-        left: x + 'px',
-        top: y + 'px'
+        display.css({
+          left: x + 'px',
+          top: y + 'px'
+        });
+        display.find('.author').text(event.actor.login);
+
+        console.log(event.repo.name);
+        var repoUrl = 'https://github.com/' + event.repo.name;
+        display.find('.repo')
+                  .text(repoUrl)
+                  .attr('href', repoUrl);
+
+        var commitscontainer = display.find('.commits');
+        commitscontainer.html('');
+        for(var i in event.payload.commits) {
+          var commit = event.payload.commits[i];
+          commitscontainer.append($('<span/>').text(commit.message));
+        }
+        selectedItem = element;
+        selectedItem.addClass('selected');
+        display.show();
+      };
+
+      var onElementSelected = function(e) {
+        showEvent(this.element, e.position[0].x, e.position[0].y);
+      };
+
+      var Bucket = function(element) {
+        this.element = element;
+        this.events = [];
+      };
+      Bucket.prototype = {
+        add: function(event) {
+          var html = this.createEventHtml(event);
+          this.events.push(event);
+          this.element.append(html);
+          this.highlightItem(html, 2);
+          var hammer = new Hammer(html.get(0));
+          hammer.element = html;
+          hammer.ontap = onElementSelected;
+        },
+        count: function() {
+          return this.events.length;
+        },
+        height: function() {
+          return this.element.height(); // for now
+        },
+        width: function() {
+          return this.element.width(); 
+        },
+        createEventHtml: function(data) {
+          var element = $('<div />')
+                          .addClass('push');
+
+          element.append($('<div/>')
+                          .addClass('author')
+                            .append($('<img/>').attr('src', data.actor.avatar_url))
+                        );
+          element.data('event', data);
+          return element;
+        },
+        highlightItem: function(html, seconds) {
+          html.addClass("fresh");
+          setTimeout(function() {
+            html.removeClass("fresh");
+            setTimeout(function(){
+              html.addClass('shadow');
+            }, 600);
+          }, 10);
+        }
+      };
+
+      var buckets = {};
+      var bucketCount = 0;
+
+      var getBucketForLanguage = function(language, cb) {
+        language = language || 'Unknown';
+        var bucket = buckets[language];
+        if(bucket) return cb(bucket);
+
+
+        bucket = $('<div/>')
+                  .attr('id', language)
+                  .css({left: bucketCount * BUCKET_WIDTH + 'px'})
+                  .addClass('bucket');
+
+        bucket.append($('<h1/>')
+                         .text(language)
+                     );
+
+
+        $('#container').append(bucket);
+        bucket = new Bucket(bucket);      
+        buckets[language] = bucket;
+        bucketCount++;
+
+        return cb(bucket);
+      };
+
+      var appendItemToDocument = function(data) {
+        getBucketForLanguage(data.language, function(bucket) {
+          bucket.add(data);
+        });
+      };
+
+      $(document).ready(function(){
+        var socket = io.connect();
+        socket.on('push', appendItemToDocument);
       });
-      display.find('.author').text(event.actor.login);
 
-      console.log(event.repo.name);
-      var repoUrl = 'https://github.com/' + event.repo.name;
-      display.find('.repo')
-                .text(repoUrl)
-                .attr('href', repoUrl);
+      var recalculateScale = function() {
+        var container = $('#container');
+        var doc = $(window);
 
-      var commitscontainer = display.find('.commits');
-      commitscontainer.html('');
-      for(var i in event.payload.commits) {
-        var commit = event.payload.commits[i];
-        commitscontainer.append($('<span/>').text(commit.message));
-      }
-      selectedItem = element;
-      selectedItem.addClass('selected');
-      display.show();
-    };
+        var containerHeight = 0;
+        var containerWidth = 0;
+        var totalItems = 0;
 
-    var onElementSelected = function(e) {
-      showEvent(this.element, e.position[0].x, e.position[0].y);
-    };
+        for(var i in buckets) {
+          var bucket = buckets[i];
+          totalItems += bucket.count();
+        }
+        if(totalItems === 0) return;
 
-    var Bucket = function(element) {
-      this.element = element;
-      this.events = [];
-    };
-    Bucket.prototype = {
-      add: function(event) {
-        var html = this.createEventHtml(event);
-        this.events.push(event);
-        this.element.append(html);
-        this.highlightItem(html, 2);
-        var hammer = new Hammer(html.get(0));
-        hammer.element = html;
-        hammer.ontap = onElementSelected;
-      },
-      count: function() {
-        return this.events.length;
-      },
-      height: function() {
-        return this.element.height(); // for now
-      },
-      width: function() {
-        return this.element.width(); 
-      },
-      createEventHtml: function(data) {
-        var element = $('<div />')
-                        .addClass('push');
+        for(var i in buckets) {
+          var bucket = buckets[i];
+          var bucketHeight = bucket.height();
+          containerHeight = Math.max(containerHeight,  bucketHeight);
+          containerWidth += bucket.width();
+        }
+        containerWidth += BUCKET_WIDTH; 
 
-        element.append($('<div/>')
-                        .addClass('author')
-                          .append($('<img/>').attr('src', data.actor.avatar_url))
-                      );
-        element.data('event', data);
-        return element;
-      },
-      highlightItem: function(html, seconds) {
-        html.addClass("fresh");
-        setTimeout(function() {
-          html.removeClass("fresh");
-          setTimeout(function(){
-            html.addClass('shadow');
-          }, 600);
-        }, 10);
-      }
-    };
+        var x = doc.width() / containerWidth;
+        var y = doc.height() / containerHeight;
+        var scale = Math.min(x, y);
+        scale = Math.min(scale, 0.3);
 
-    var buckets = {};
-    var bucketCount = 0;
+        var scaleDifference = lastScale - scale;
+        if(scaleDifference < 0.01) return;
 
-    var getBucketForLanguage = function(language, cb) {
-      language = language || 'Unknown';
-      var bucket = buckets[language];
-      if(bucket) return cb(bucket);
+        lastScale = scale;
+        container.css('-webkit-transform', 'scale(' + scale + ')'); 
+      };
 
+      setInterval(recalculateScale, 500);
 
-      bucket = $('<div/>')
-                .attr('id', language)
-                .css({left: bucketCount * BUCKET_WIDTH + 'px'})
-                .addClass('bucket');
+    </script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11207442-11']);
+      _gaq.push(['_trackPageview']);
 
-      bucket.append($('<h1/>')
-                       .text(language)
-                   );
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
 
-
-      $('#container').append(bucket);
-      bucket = new Bucket(bucket);      
-      buckets[language] = bucket;
-      bucketCount++;
-
-      return cb(bucket);
-    };
-
-    var appendItemToDocument = function(data) {
-      getBucketForLanguage(data.language, function(bucket) {
-        bucket.add(data);
-      });
-    };
-
-    $(document).ready(function(){
-      var socket = io.connect();
-      socket.on('push', appendItemToDocument);
-    });
-
-    var recalculateScale = function() {
-      var container = $('#container');
-      var doc = $(window);
-
-      var containerHeight = 0;
-      var containerWidth = 0;
-      var totalItems = 0;
-
-      for(var i in buckets) {
-        var bucket = buckets[i];
-        totalItems += bucket.count();
-      }
-      if(totalItems === 0) return;
-
-      for(var i in buckets) {
-        var bucket = buckets[i];
-        var bucketHeight = bucket.height();
-        containerHeight = Math.max(containerHeight,  bucketHeight);
-        containerWidth += bucket.width();
-      }
-      containerWidth += BUCKET_WIDTH; 
-
-      var x = doc.width() / containerWidth;
-      var y = doc.height() / containerHeight;
-      var scale = Math.min(x, y);
-      scale = Math.min(scale, 0.3);
-
-      var scaleDifference = lastScale - scale;
-      if(scaleDifference < 0.01) return;
-
-      lastScale = scale;
-      container.css('-webkit-transform', 'scale(' + scale + ')'); 
-    };
-
-    setInterval(recalculateScale, 500);
-
-  </script>
+    </script>
+  </head>
   <body>
     <h1 class="title">Github Live</h1>
     <div id="outerContainer">
