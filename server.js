@@ -20,9 +20,24 @@ var server = http.createServer(function(req, res) {
 });
 
 var io = socketio.listen(server);
+io.configure({
+  'log level': 0
+});
 server.listen(PORT);
 
 var eventQueue = [];
+var timeUntilNextEvents = 10000;
+var last_created_at = new Date();
+var overlapped = false;
+
+var updateTimers = function() {
+  if(overlapped) {
+    timeUntilNextEvents += 1000;
+    overlapped = false;
+  } else {
+    timeUntilNextEvents -= 1000;
+  }
+}
 
 var fetchRepoInfo = function(name, cb) {
  var request = https.get({ host: 'api.github.com', path: '/repos/' + name}, function(res) {
@@ -57,6 +72,13 @@ var eventHandlers = {
 }
 
 var processEvent = function(event) {
+  if(event.created_at < last_created_at) {
+    console.log('Skipping event', event.created_at);
+    overlapped = true;
+    return;
+  }
+  console.log('Processing event', event.created_at);
+  last_created_at = event.created_at;
   var handler = eventHandlers[event.type];
   if(!handler) return;
   handler(event);
@@ -64,8 +86,10 @@ var processEvent = function(event) {
 
 var processData = function(data) {
   var eventArray = JSON.parse(data);
-  for(var i =0 ; i < eventArray.length; i++)
+  for(var i = eventArray.length-1 ; i >= 0; i--) {
     processEvent(eventArray[i]);
+  }
+  updateTimers();
 };
 
 var downloadEvents = function() {
@@ -80,6 +104,9 @@ var downloadEvents = function() {
   }).on('error', function(e) {
     console.error(e);
   });
+
+  setTimeout(downloadEvents, timeUntilNextEvents);
+  console.log('Waiting ' + timeUntilNextEvents + ' until reading API again');
 };
 
 var broadcastEvent = function() {
@@ -88,5 +115,5 @@ var broadcastEvent = function() {
   io.sockets.emit('push', event);
 };
 
-setInterval(downloadEvents, 10000);
-setInterval(broadcastEvent, 500)
+downloadEvents();
+setInterval(broadcastEvent, 500);
