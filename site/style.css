@@ -48,7 +48,6 @@ h1.title {
   width: 145px;
   border-radius: 15px;
   -moz-border-radius: 15px;
-  box-shadow: 3px 3px 10px 5px #F3F781;
 }
 
 .push {
@@ -57,6 +56,10 @@ h1.title {
 
 .highlighted {
   -webkit-transform: scale(0.2);
+}
+
+.boxShadow {
+  box-shadow: 3px 3px 10px 5px #F3F781;
 }
 
 #dialog-container {

@@ -70,8 +70,9 @@
         return element;
       },
       highlightItem: function(html, seconds) {
-        html.addClass("highlighted");
+        html.addClass('highlighted');
         setTimeout(function() {
+          $(html).find('img').addClass("boxShadow");
           html.removeClass("highlighted");
         }, seconds * 500);
       }
