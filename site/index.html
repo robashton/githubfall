@@ -144,10 +144,11 @@
         mouseIsInside=false;
       });
 
-      $("body").click(function(){ 
+      var bodyHammer = new Hammer(document.body);
+      bodyHammer.ontap = function() {
         if (!mouseIsInside)
           hideEvent();
-      });
+      };
     });
 
      var recalculateScale = function() {
