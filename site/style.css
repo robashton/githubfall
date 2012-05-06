@@ -1,3 +1,9 @@
+body {
+  background-color: #181907;
+  font-style: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
+  color: #eeeeee;
+}
+
 #container {
   -webkit-transform-origin: 0px 0px;
   -webkit-transform: scale(1.0);
@@ -12,16 +18,29 @@
   position: absolute;
 }
 
+h1 {
+  font-variant: small-caps;
+}
+
+h1.title {
+  color: #D7DF01;
+  text-shadow: 0 0 3px #F3F781;
+}
+
 .bucket h1 {
   font-size: 100px;
 }
 
 .bucket div {
   float: left;
+  padding: 0 10px 10px 0;
 }
 
 .bucket img {
   width: 145px;
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+  box-shadow: 3px 3px 10px 5px #F3F781;
 }
 
 .push {
@@ -31,8 +50,6 @@
 
 .highlighted {
   -webkit-transform: scale(5.0);
-  paddding: 10px 10px 10px 10px;
-  background-color: '#00F';
   opacity: 0.5;
   -moz-opacity: 0.5;
   filter:alpha(opacity=5);
