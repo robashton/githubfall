@@ -8,12 +8,13 @@
     var BUCKET_WIDTH = 600;
     var lastScale = 1.0;
 
-    var showEvent = function(event, x, y) {
+/*    var showEvent = function(event, x, y) {
       var display = $('#event-display');
       display.css({
         left: x + 'px',
         top: y + 'px'
       });
+      
       display.find('.author').text(event.actor.login);
 
       var commitscontainer = display.find('.commits');
@@ -33,7 +34,7 @@
     var onElementMouseLeave = function(e) {
        $('#event-display').hide();
     };
-
+*/
     var Bucket = function(element) {
       this.element = element;
       this.events = [];
@@ -45,7 +46,7 @@
         this.element.append(html);
         //html.on('mouseenter', onElementMouseEnter);
         //html.on('mouseleave', onElementMouseLeave);
-        //this.highlightItem(html, 2);
+        this.highlightItem(html, 2);
       },
       count: function() {
         return this.events.length;
@@ -72,7 +73,7 @@
         html.addClass("highlighted");
         setTimeout(function() {
           html.removeClass("highlighted");
-        }, seconds * 1000);
+        }, seconds * 500);
       }
     };
 

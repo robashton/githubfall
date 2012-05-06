@@ -59,6 +59,7 @@ h1.title {
   opacity: 0.5;
   -moz-opacity: 0.5;
   filter:alpha(opacity=5);
+  box-shadow: none;
 }
 
 #dialog-container {
@@ -68,7 +69,6 @@ h1.title {
 #event-display {
   display: none;
   position: relative;
-  background-color: #FFF;
   border: 1px solid #000;
   -webkit-box-shadow: 3px 3px 4px #000;
 }
