@@ -1,7 +1,7 @@
 body {
   background-color: #181907;
-  font-style: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
   color: #eeeeee;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
 }
 
 #outerContainer {
@@ -96,7 +96,18 @@ h1.title {
   margin: 3px 0 3px 0;
 }
 
-#event-display span {
+#event-display span, #event-display a {
   display: block;
+  color: #ddd;
+  font-size: 0.8em;
   margin-bottom: 3px;
+}
+
+#event-display a {
+  color: #D7DF01;
+  text-decoration: none;
+}
+
+#event-display a:hover {
+  text-decoration: underline;
 }

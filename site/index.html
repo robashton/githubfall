@@ -38,7 +38,9 @@
       commitscontainer.html('');
       for(var i in event.payload.commits) {
         var commit = event.payload.commits[i];
-        commitscontainer.append($('<span/>').text(commit.message));
+        var commitHtml = $('<span/>').text(commit.message);
+
+        commitscontainer.append(commitHtml);
       }
       selectedItem = element;
       selectedItem.addClass('selected');
@@ -177,10 +179,7 @@
       </div>
     </div>
     <div id="dialog-container">
-      <div id="event-display">
-        <div id="event-display-close">
-
-        </div>
+      <div id="event-display" class="font">
         <h4 class="author"></h4>
         <a href="" class="repo"></a>
         <div class="commits">
