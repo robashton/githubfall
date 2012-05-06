@@ -179,7 +179,7 @@
         scale = Math.min(scale, 0.3);
 
         var scaleDifference = lastScale - scale;
-        if(Math.abs(scaleDifference) < 0.05) return;
+        if(Math.abs(scaleDifference) < 0.01) return;
 
         lastScale = scale;
         container.css({
