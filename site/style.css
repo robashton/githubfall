@@ -71,9 +71,9 @@ h1.title {
 }
 
 .boxShadow {
-  -moz-box-shadow: 0 0 5px 5px #F3F781;
-  -webkit-box-shadow: 0 0 5px 5px #F3F781;
-  box-shadow: 0 0 5px 5px #F3F781;
+  -moz-box-shadow: 0 0 5px 5px #F5F6CE;
+  -webkit-box-shadow: 0 0 5px 5px #F5F6CE;
+  box-shadow: 0 0 5px 5px #F5F6CE;
 }
 
 .selected {
