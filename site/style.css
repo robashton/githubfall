@@ -1,7 +1,7 @@
 body {
   background-color: #181907;
-  font-style: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
   color: #eeeeee;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
 }
 
 #outerContainer {
@@ -9,6 +9,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  padding: 0;
 }
 
 #container {
@@ -27,6 +28,7 @@ body {
 
 h1 {
   font-variant: small-caps;
+  margin-bottom: 5px;
 }
 
 h1.title {
@@ -55,16 +57,12 @@ h1.title {
   cursor: pointer;
 }
 
-.fresh {
+.highlighted {
   -webkit-transform: scale(0.001);
 }
 
-.shadow img {
+.boxShadow {
   box-shadow: 3px 3px 10px 5px #F3F781;
-}
-
-.fresh img {
-  box-shadow: none;
 }
 
 .selected {
@@ -94,7 +92,22 @@ h1.title {
   pointer-events: all;
 }
 
-#event-display span {
+#event-display h4 {
+  margin: 3px 0 3px 0;
+}
+
+#event-display span, #event-display a {
   display: block;
+  color: #ddd;
+  font-size: 0.8em;
   margin-bottom: 3px;
+}
+
+#event-display a {
+  color: #D7DF01;
+  text-decoration: none;
+}
+
+#event-display a:hover {
+  text-decoration: underline;
 }

@@ -38,7 +38,9 @@
       commitscontainer.html('');
       for(var i in event.payload.commits) {
         var commit = event.payload.commits[i];
-        commitscontainer.append($('<span/>').text(commit.message));
+        var commitHtml = $('<span/>').text(commit.message);
+
+        commitscontainer.append(commitHtml);
       }
       selectedItem = element;
       selectedItem.addClass('selected');
@@ -58,7 +60,7 @@
         var html = this.createEventHtml(event);
         this.events.push(event);
         this.element.append(html);
-        this.highlightItem(html, 2);
+        this.highlightItem(html);
         var hammer = new Hammer(html.get(0));
         hammer.element = html;
         hammer.ontap = onElementSelected;
@@ -83,14 +85,15 @@
         element.data('event', data);
         return element;
       },
-      highlightItem: function(html, seconds) {
-        html.addClass("fresh");
-        setTimeout(function() {
-          html.removeClass("fresh");
-          setTimeout(function(){
-            html.addClass('shadow');
-          }, 600);
-        }, 10);
+      highlightItem: function(html) {
+        html.addClass('highlighted');
+        
+        $(html).find('img').load(function(imgHtml) {
+          setTimeout(function() {
+            $(html).find('img').addClass("boxShadow");
+            html.removeClass("highlighted");
+          }, 500);
+        });
       }
     };
 
@@ -102,23 +105,22 @@
       var bucket = buckets[language];
       if(bucket) return cb(bucket);
 
-
       bucket = $('<div/>')
                 .attr('id', language)
                 .css({left: bucketCount * BUCKET_WIDTH + 'px'})
-                .addClass('bucket');
-
-      bucket.append($('<h1/>')
+                .addClass('bucket')
+                .append($('<h1/>')
                        .text(language)
                    );
-
 
       $('#container').append(bucket);
       bucket = new Bucket(bucket);      
       buckets[language] = bucket;
       bucketCount++;
 
-      return cb(bucket);
+      setTimeout(function() {
+        return cb(bucket);
+      }, 800);
     };
 
     var appendItemToDocument = function(data) {
@@ -160,13 +162,13 @@
       scale = Math.min(scale, 0.3);
 
       var scaleDifference = lastScale - scale;
-      if(scaleDifference < 0.01) return;
+      if(scaleDifference < 0.05) return;
 
       lastScale = scale;
       container.css('-webkit-transform', 'scale(' + scale + ')'); 
     };
 
-    setInterval(recalculateScale, 500);
+    setInterval(recalculateScale, 300);
 
   </script>
   <body>
@@ -177,10 +179,7 @@
       </div>
     </div>
     <div id="dialog-container">
-      <div id="event-display">
-        <div id="event-display-close">
-
-        </div>
+      <div id="event-display" class="font">
         <h4 class="author"></h4>
         <a href="" class="repo"></a>
         <div class="commits">
