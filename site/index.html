@@ -1,15 +1,27 @@
 <html>
   <script type="text/javascript" src="socket.io/socket.io.js"></script>
   <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="hammer.js"></script>
   <link rel="stylesheet" type="text/css" href="style.css"></script>
 
   <script type="text/javascript">
 
     var BUCKET_WIDTH = 600;
     var lastScale = 1.0;
+    var selectedItem = null;
 
-    var showEvent = function(event, x, y) {
+    var hideEvent = function() {
+      if(!selectedItem) return;
+      $('#event-display').hide();
+      selectedItem.removeClass('selected');
+      selectedItem = null;
+    }
+
+    var showEvent = function(element, x, y) {
+      hideEvent();
       var display = $('#event-display');
+      var event = element.data('event');
+
       display.css({
         left: x + 'px',
         top: y + 'px'
@@ -22,16 +34,13 @@
         var commit = event.payload.commits[i];
         commitscontainer.append($('<span/>').text(commit.message));
       }
-      $('#event-display').show();
-    }
-
-    var onElementMouseEnter = function(e) {
-      var event = $(this).data('event');
-      showEvent(event, e.pageX, e.pageY);
+      selectedItem = element;
+      selectedItem.addClass('selected');
+      display.show();
     };
 
-    var onElementMouseLeave = function(e) {
-       $('#event-display').hide();
+    var onElementSelected = function(e) {
+      showEvent(this.element, e.position[0].x, e.position[0].y);
     };
 
     var Bucket = function(element) {
@@ -43,10 +52,10 @@
         var html = this.createEventHtml(event);
         this.events.push(event);
         this.element.append(html);
-
-        //html.on('mouseenter', onElementMouseEnter);
-        //html.on('mouseleave', onElementMouseLeave);
         this.highlightItem(html, 2);
+        var hammer = new Hammer(html.get(0));
+        hammer.element = html;
+        hammer.ontap = onElementSelected;
       },
       count: function() {
         return this.events.length;
@@ -160,11 +169,11 @@
       <div id="container">
 
       </div>
-      <div id="dialog-container">
-        <div id="event-display">
-          <h4 class="author"></h4>
-          <div class="commits">
-          </div>
+    </div>
+    <div id="dialog-container">
+      <div id="event-display">
+        <h4 class="author"></h4>
+        <div class="commits">
         </div>
       </div>
     </div>

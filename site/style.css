@@ -20,7 +20,7 @@ body {
 
 .bucket {
   width: 600px;
-  margin-left: 10px;
+  margin-left: 30px;
   top: 0px;
   position: absolute;
 }
@@ -51,7 +51,8 @@ h1.title {
 
 .push {
   -webkit-transition: -webkit-transform 0.5s linear;
-    -webkit-backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  cursor: pointer;
 }
 
 .fresh {
@@ -66,16 +67,31 @@ h1.title {
   box-shadow: none;
 }
 
+.selected {
+  -webkit-transform-origin: 90% 90%;
+  z-index: -10;
+  -webkit-transform: scale(2.0);
+}
+
 #dialog-container {
   position: absolute;
+  left: 0px;
+  top: 0px;
+  pointer-events: none;
 }
 
 #event-display {
   display: none;
   position: relative;
-  background-color: #FFF;
-  border: 1px solid #000;
+  background-color: #000;
+  color: #EEE;
+  width: 400px;
+  border: 1px solid #EEE;
   -webkit-box-shadow: 3px 3px 4px #000;
+   border-radius: 15px;
+  -moz-border-radius: 15px;
+  padding: 10px 10px 10px 10px;
+  pointer-events: all;
 }
 
 #event-display span {
