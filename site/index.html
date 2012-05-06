@@ -28,6 +28,12 @@
       });
       display.find('.author').text(event.actor.login);
 
+      console.log(event.repo.name);
+      var repoUrl = 'https://github.com/' + event.repo.name;
+      display.find('.repo')
+                .text(repoUrl)
+                .attr('href', repoUrl);
+
       var commitscontainer = display.find('.commits');
       commitscontainer.html('');
       for(var i in event.payload.commits) {
@@ -172,8 +178,13 @@
     </div>
     <div id="dialog-container">
       <div id="event-display">
+        <div id="event-display-close">
+
+        </div>
         <h4 class="author"></h4>
+        <a href="" class="repo"></a>
         <div class="commits">
+
         </div>
       </div>
     </div>
