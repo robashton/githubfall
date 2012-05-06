@@ -92,6 +92,10 @@ h1.title {
   pointer-events: all;
 }
 
+#event-display h4 {
+  margin: 3px 0 3px 0;
+}
+
 #event-display span {
   display: block;
   margin-bottom: 3px;
