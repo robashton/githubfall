@@ -8,33 +8,6 @@
     var BUCKET_WIDTH = 600;
     var lastScale = 1.0;
 
-/*    var showEvent = function(event, x, y) {
-      var display = $('#event-display');
-      display.css({
-        left: x + 'px',
-        top: y + 'px'
-      });
-      
-      display.find('.author').text(event.actor.login);
-
-      var commitscontainer = display.find('.commits');
-      commitscontainer.html('');
-      for(var i in event.payload.commits) {
-        var commit = event.payload.commits[i];
-        commitscontainer.append($('<span/>').text(commit.message));
-      }
-      $('#event-display').show();
-    }
-
-    var onElementMouseEnter = function(e) {
-      var event = $(this).data('event');
-      showEvent(event, e.pageX, e.pageY);
-    };
-
-    var onElementMouseLeave = function(e) {
-       $('#event-display').hide();
-    };
-*/
     var Bucket = function(element) {
       this.element = element;
       this.events = [];
@@ -44,10 +17,7 @@
         var html = this.createEventHtml(event);
         this.events.push(event);
         this.element.append(html);
-
-        //html.on('mouseenter', onElementMouseEnter);
-        //html.on('mouseleave', onElementMouseLeave);
-        this.highlightItem(html, 2);
+        this.highlightItem(html);
       },
       count: function() {
         return this.events.length;
@@ -69,12 +39,15 @@
         element.data('event', data);
         return element;
       },
-      highlightItem: function(html, seconds) {
+      highlightItem: function(html) {
         html.addClass('highlighted');
-        setTimeout(function() {
-          $(html).find('img').addClass("boxShadow");
-          html.removeClass("highlighted");
-        }, seconds * 500);
+        
+        $(html).find('img').load(function(imgHtml) {
+          setTimeout(function() {
+            $(html).find('img').addClass("boxShadow");
+            html.removeClass("highlighted");
+          }, 500);
+        });
       }
     };
 
@@ -99,7 +72,9 @@
       buckets[language] = bucket;
       bucketCount++;
 
-      return cb(bucket);
+      setTimeout(function() {
+        return cb(bucket);
+      }, 800);
     };
 
     var appendItemToDocument = function(data) {

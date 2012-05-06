@@ -16,6 +16,7 @@ body {
   -webkit-transform-origin: 0px 0px;
   -webkit-transform: scale(1.0);
   -webkit-transition: -webkit-transform 0.5s linear;
+  -webkit-backface-visibility: hidden;
 }
 
 .bucket {
@@ -52,10 +53,11 @@ h1.title {
 
 .push {
   -webkit-transition: -webkit-transform 0.5s linear;
+  -webkit-backface-visibility: hidden;
 }
 
 .highlighted {
-  -webkit-transform: scale(0.2);
+  -webkit-transform: scale(0.001);
 }
 
 .boxShadow {
