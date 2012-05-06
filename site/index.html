@@ -108,7 +108,7 @@
     };
 
     $(document).ready(function(){
-     var socket = io.connect();
+      var socket = io.connect();
       socket.on('push', appendItemToDocument);
     });
 
@@ -147,14 +147,15 @@
   </script>
   <body>
     <h1 class="title">Github Live</h1>
-    <div id="container">
+    <div id="outerContainer">
+      <div id="container">
 
-    </div>
-    <div id="dialog-container">
-      <div id="event-display">
-        <h4 class="author"></h4>
-        <div class="commits">
-
+      </div>
+      <div id="dialog-container">
+        <div id="event-display">
+          <h4 class="author"></h4>
+          <div class="commits">
+          </div>
         </div>
       </div>
     </div>
