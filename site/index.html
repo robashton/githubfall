@@ -44,6 +44,7 @@
         this.element.append(html);
         html.on('mouseenter', onElementMouseEnter);
         html.on('mouseleave', onElementMouseLeave);
+        this.highlightItem(html, 2);
       },
       count: function() {
         return this.events.length;
@@ -53,9 +54,6 @@
       },
       width: function() {
         return this.element.width(); 
-      },
-      setItemCountHorizontal: function(count) {
-        this.element.css('width', count * 150 + 'px');
       },
       createEventHtml: function(data) {
         var element = $('<div />')
@@ -68,6 +66,12 @@
                       );
         element.data('event', data);
         return element;
+      },
+      highlightItem: function(html, seconds) {
+        html.addClass("highlighted");
+        setTimeout(function() {
+          html.removeClass("highlighted");
+        }, seconds * 1000);
       }
     };
 
