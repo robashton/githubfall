@@ -1,18 +1,19 @@
 #container {
   -webkit-transform-origin: 0px 0px;
   -webkit-transform: scale(1.0);
-  -webkit-transition: -webkit-transform 2s linear;
+  -webkit-transition: -webkit-transform 0.5s linear;
   width: auto;
 }
 
 .bucket {
-  float: left;
   width: 600px;
   margin-left: 10px;
+  top: 0px;
+  position: absolute;
 }
 
 .bucket h1 {
-  font-size: 64px;
+  font-size: 100px;
 }
 
 .bucket div {
@@ -21,4 +22,35 @@
 
 .bucket img {
   width: 145px;
+}
+
+.push {
+  -webkit-transform: scale(1.0);
+  -webkit-transition: -webkit-transform 0.5s linear;
+}
+
+.highlighted {
+  -webkit-transform: scale(5.0);
+  paddding: 10px 10px 10px 10px;
+  background-color: '#00F';
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+  filter:alpha(opacity=5);
+}
+
+#dialog-container {
+  position: absolute;
+}
+
+#event-display {
+  display: none;
+  position: relative;
+  background-color: #FFF;
+  border: 1px solid #000;
+  -webkit-box-shadow: 3px 3px 4px #000;
+}
+
+#event-display span {
+  display: block;
+  margin-bottom: 3px;
 }

@@ -5,6 +5,34 @@
 
   <script type="text/javascript">
 
+    var BUCKET_WIDTH = 600;
+
+    var showEvent = function(event, x, y) {
+      var display = $('#event-display');
+      display.css({
+        left: x + 'px',
+        top: y + 'px'
+      });
+      display.find('.author').text(event.actor.login);
+
+      var commitscontainer = display.find('.commits');
+      commitscontainer.html('');
+      for(var i in event.payload.commits) {
+        var commit = event.payload.commits[i];
+        commitscontainer.append($('<span/>').text(commit.message));
+      }
+      $('#event-display').show();
+    }
+
+    var onElementMouseEnter = function(e) {
+      var event = $(this).data('event');
+      showEvent(event, e.pageX, e.pageY);
+    };
+
+    var onElementMouseLeave = function(e) {
+       $('#event-display').hide();
+    };
+
     var Bucket = function(element) {
       this.element = element;
       this.events = [];
@@ -14,6 +42,9 @@
         var html = this.createEventHtml(event);
         this.events.push(event);
         this.element.append(html);
+        html.on('mouseenter', onElementMouseEnter);
+        html.on('mouseleave', onElementMouseLeave);
+        this.highlightItem(html, 2);
       },
       count: function() {
         return this.events.length;
@@ -24,9 +55,6 @@
       width: function() {
         return this.element.width(); 
       },
-      setItemCountHorizontal: function(count) {
-        this.element.css('width', count * 150 + 'px');
-      },
       createEventHtml: function(data) {
         var element = $('<div />')
                         .addClass('push');
@@ -36,8 +64,14 @@
                           .append($('<p/>').text(data.actor.login))
                           .append($('<img/>').attr('src', data.actor.avatar_url))
                       );
-
+        element.data('event', data);
         return element;
+      },
+      highlightItem: function(html, seconds) {
+        html.addClass("highlighted");
+        setTimeout(function() {
+          html.removeClass("highlighted");
+        }, seconds * 1000);
       }
     };
 
@@ -52,11 +86,13 @@
 
       bucket = $('<div/>')
                 .attr('id', language)
+                .css({left: bucketCount * BUCKET_WIDTH + 'px'})
                 .addClass('bucket');
 
       bucket.append($('<h1/>')
                        .text(language)
                    );
+
 
       $('#container').append(bucket);
       buckets[language] = new Bucket(bucket);
@@ -90,30 +126,37 @@
       }
       if(totalItems === 0) return;
 
-      // var idealForSquare = Math.sqrt(totalItems);
-      // console.log(idealForSquare);
-      // var widthPerColumn = Math.max(Math.floor(idealForSquare), 1);
-
       for(var i in buckets) {
         var bucket = buckets[i];
         var bucketHeight = bucket.height();
         containerHeight = Math.max(containerHeight,  bucketHeight);
-        containerWidth += 600;
+        containerWidth += bucket.width();
       }
+      containerWidth += BUCKET_WIDTH; 
 
-      container.css('width', containerWidth + 100 + 'px');
       var x = doc.width() / containerWidth;
       var y = doc.height() / containerHeight;
       var scale = Math.min(x, y);
+      if(scale > 1) return;
+
       container.css('-webkit-transform', 'scale(' + scale + ')'); 
     };
 
-    setInterval(recalculateScale, 2000);
+    setInterval(recalculateScale, 500);
 
   </script>
   <body>
+    <h1>Github Live</h1>
     <div id="container">
 
+    </div>
+    <div id="dialog-container">
+      <div id="event-display">
+        <h4 class="author"></h4>
+        <div class="commits">
+
+        </div>
+      </div>
     </div>
   </body>
 </html>
