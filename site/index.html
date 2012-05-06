@@ -27,8 +27,8 @@
       var event = element.data('event');
 
       display.css({
-        left: x + 'px',
-        top: y + 'px'
+        left: (x - 20) + 'px',
+        top: (y - 20) + 'px'
       });
       display.find('.author').text(event.actor.login);
 
@@ -194,7 +194,7 @@
       </div>
     </div>
     <div id="dialog-container">
-      <div id="event-display" class="font">
+      <div id="event-display">
         <h4 class="author"></h4>
         <a href="" class="repo"></a>
         <div class="commits">
