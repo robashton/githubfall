@@ -58,6 +58,7 @@ var createDataFromPushEvent = function(data, cb) {
     cb({
       language: repo.language,
       actor: data.actor,
+      repo: data.repo,
       payload: data.payload
     });
   });
