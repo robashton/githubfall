@@ -44,6 +44,7 @@
         var html = this.createEventHtml(event);
         this.events.push(event);
         this.element.append(html);
+
         //html.on('mouseenter', onElementMouseEnter);
         //html.on('mouseleave', onElementMouseLeave);
         this.highlightItem(html, 2);
@@ -95,8 +96,8 @@
                    );
 
       $('#container').append(bucket);
-
-      buckets[language] = new Bucket(bucket);
+      bucket = new Bucket(bucket);      
+      buckets[language] = bucket;
       bucketCount++;
 
       return cb(bucket);
