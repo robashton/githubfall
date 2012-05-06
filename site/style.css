@@ -52,16 +52,11 @@ h1.title {
 }
 
 .push {
-  -webkit-transform: scale(1.0);
   -webkit-transition: -webkit-transform 0.5s linear;
 }
 
-.highlightedAndScale {
-  -webkit-transform: scale(0.2);
-}
-
 .highlighted {
-/*  box-shadow: none;*/
+  -webkit-transform: scale(0.2);
 }
 
 #dialog-container {

@@ -64,8 +64,6 @@
 
         element.append($('<div/>')
                         .addClass('author')
-                        .addClass('highlighted')
-                          .append($('<p/>').text(data.actor.login))
                           .append($('<img/>').attr('src', data.actor.avatar_url))
                       );
         element.data('event', data);
@@ -74,7 +72,7 @@
       highlightItem: function(html, seconds) {
         html.addClass("highlighted");
         setTimeout(function() {
-          html.removeClass("highlightedAndScale");
+          html.removeClass("highlighted");
         }, seconds * 500);
       }
     };
