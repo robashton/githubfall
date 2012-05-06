@@ -63,6 +63,7 @@
 
         element.append($('<div/>')
                         .addClass('author')
+                        .addClass('highlighted')
                           .append($('<p/>').text(data.actor.login))
                           .append($('<img/>').attr('src', data.actor.avatar_url))
                       );
@@ -72,7 +73,7 @@
       highlightItem: function(html, seconds) {
         html.addClass("highlighted");
         setTimeout(function() {
-          html.removeClass("highlighted");
+          html.removeClass("highlightedAndScale");
         }, seconds * 500);
       }
     };
@@ -85,18 +86,16 @@
       var bucket = buckets[language];
       if(bucket) return cb(bucket);
 
-
       bucket = $('<div/>')
                 .attr('id', language)
                 .css({left: bucketCount * BUCKET_WIDTH + 'px'})
-                .addClass('bucket');
-
-      bucket.append($('<h1/>')
+                .addClass('bucket')
+                .append($('<h1/>')
                        .text(language)
                    );
 
-
       $('#container').append(bucket);
+
       buckets[language] = new Bucket(bucket);
       bucketCount++;
 
@@ -142,13 +141,13 @@
       scale = Math.min(scale, 0.3);
 
       var scaleDifference = lastScale - scale;
-      if(scaleDifference < 0.01) return;
+      if(scaleDifference < 0.05) return;
 
       lastScale = scale;
       container.css('-webkit-transform', 'scale(' + scale + ')'); 
     };
 
-    setInterval(recalculateScale, 500);
+    setInterval(recalculateScale, 300);
 
   </script>
   <body>
