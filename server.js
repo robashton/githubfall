@@ -22,13 +22,7 @@ var server = http.createServer(function(req, res) {
 var io = socketio.listen(server);
 server.listen(PORT);
 
-var allEvents = []; // TODO: Remove this when not debugging!
 var eventQueue = [];
-
-io.sockets.on('connection', function(socket) {
-  for(var i in allEvents)
-    socket.emit('push', allEvents[i]);
-});
 
 var fetchRepoInfo = function(name, cb) {
  var request = https.get({ host: 'api.github.com', path: '/repos/' + name}, function(res) {
@@ -58,7 +52,6 @@ var eventHandlers = {
   "PushEvent": function(event) {
     createDataFromPushEvent(event, function(data) {
       eventQueue.push(data);
-      allEvents.push(data);
     });
   }
 }

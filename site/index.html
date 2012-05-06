@@ -43,9 +43,9 @@
         var html = this.createEventHtml(event);
         this.events.push(event);
         this.element.append(html);
-        html.on('mouseenter', onElementMouseEnter);
-        html.on('mouseleave', onElementMouseLeave);
-        this.highlightItem(html, 2);
+        //html.on('mouseenter', onElementMouseEnter);
+        //html.on('mouseleave', onElementMouseLeave);
+        //this.highlightItem(html, 2);
       },
       count: function() {
         return this.events.length;
