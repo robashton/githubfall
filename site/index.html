@@ -9,8 +9,10 @@
     var BUCKET_WIDTH = 600;
     var lastScale = 1.0;
     var selectedItem = null;
+    var mouseIsInside = false;
 
     var hideEvent = function() {
+      mouseIsInside = false;
       if(!selectedItem) return;
       $('#event-display').hide();
       selectedItem.removeClass('selected');
@@ -19,6 +21,8 @@
 
     var showEvent = function(element, x, y) {
       hideEvent();
+      mouseIsInside = true;
+
       var display = $('#event-display');
       var event = element.data('event');
 
@@ -132,6 +136,17 @@
     $(document).ready(function(){
       var socket = io.connect();
       socket.on('push', appendItemToDocument);
+    
+      $('#event-display').hover(function(){ 
+        mouseIsInside=true; 
+      }, function(){
+        mouseIsInside=false;
+      });
+
+      $("body").click(function(){ 
+        if (!mouseIsInside)
+          hideEvent();
+      });
     });
 
     var recalculateScale = function() {
