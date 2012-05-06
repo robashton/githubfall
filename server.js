@@ -110,10 +110,12 @@ var downloadEvents = function() {
 };
 
 var broadcastEvent = function() {
-  if(eventQueue.length === 0) return;
+  if(eventQueue.length === 0) 
+    return setTimeout(broadcastEvent, 500);
   var event = eventQueue.shift();
   io.sockets.emit('push', event);
+  setTimeout(broadcastEvent, Math.floor(timeUntilNextEvents / eventQueue.length));
 };
 
 downloadEvents();
-setInterval(broadcastEvent, 500);
+broadcastEvent();
