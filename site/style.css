@@ -15,6 +15,7 @@ body {
   -webkit-transform-origin: 0px 0px;
   -webkit-transform: scale(1.0);
   -webkit-transition: -webkit-transform 0.5s linear;
+  -webkit-backface-visibility: hidden;
 }
 
 .bucket {
@@ -46,19 +47,23 @@ h1.title {
   width: 145px;
   border-radius: 15px;
   -moz-border-radius: 15px;
-  box-shadow: 3px 3px 10px 5px #F3F781;
 }
 
 .push {
-  -webkit-transform: scale(1.0);
   -webkit-transition: -webkit-transform 0.5s linear;
+    -webkit-backface-visibility: hidden;
 }
 
-.highlighted {
-  -webkit-transform: scale(0.2);
-  opacity: 0.5;
-  -moz-opacity: 0.5;
-  filter:alpha(opacity=5);
+.fresh {
+  -webkit-transform: scale(0.001);
+}
+
+.shadow img {
+  box-shadow: 3px 3px 10px 5px #F3F781;
+}
+
+.fresh img {
+  box-shadow: none;
 }
 
 #dialog-container {

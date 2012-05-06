@@ -46,7 +46,7 @@
 
         //html.on('mouseenter', onElementMouseEnter);
         //html.on('mouseleave', onElementMouseLeave);
-        //this.highlightItem(html, 2);
+        this.highlightItem(html, 2);
       },
       count: function() {
         return this.events.length;
@@ -63,17 +63,19 @@
 
         element.append($('<div/>')
                         .addClass('author')
-                          .append($('<p/>').text(data.actor.login))
                           .append($('<img/>').attr('src', data.actor.avatar_url))
                       );
         element.data('event', data);
         return element;
       },
       highlightItem: function(html, seconds) {
-        html.addClass("highlighted");
+        html.addClass("fresh");
         setTimeout(function() {
-          html.removeClass("highlighted");
-        }, seconds * 1000);
+          html.removeClass("fresh");
+          setTimeout(function(){
+            html.addClass('shadow');
+          }, 600);
+        }, 10);
       }
     };
 
