@@ -130,7 +130,7 @@ h1.title {
 }
 
 .matrix {
-  color: rgba(0, 255, 0, .5);
+  color: rgba(0, 255, 0, .4);
   text-shadow: rgba(255, 255, 255, .8) 0px 0px 4px;
   position: absolute;
   left: 0;
@@ -171,7 +171,7 @@ h1.title {
   -webkit-animation-timing-function: ease-out;
 }
 
-.matrix span {
+.matrix span.high {
   color: rgb(0, 255, 0);
   text-shadow: rgb(255, 255, 255) 0px 0px 5px;
 }

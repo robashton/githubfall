@@ -76,23 +76,17 @@
         if (!$.browser.webkit) return;
 
         var fallContainer = $('#' + language + 'Fall');
-        var fallHtml = $('<div/>');
-             //           .css({left: FALL_WIDTH * fallContainer.find('div').size()});;
-
+        var fallText = '';
+        
         for(var i in event.payload.commits) {
-          var commit = event.payload.commits[i];
-          var commitHtml = $('<p/>').text(commit.message);
-
-          fallHtml.append(commitHtml);
+          fallText += event.payload.commits[i].message;
         }
       
-        if (fallHtml.length < 1) return;
-
         $(fallContainer)
           .prepend(
-            fallHtml
+            $('<div />')
               .css({left: FALL_WIDTH * fallContainer.find('div').size()})
-              .prepend($('<span/>').text(event.repo.name))
+              .html('<span class="high">' + event.repo.name + '</span> ' + fallText.replace(/[\\r\\n]/g, " "))
           );
 
         $(fallContainer)
