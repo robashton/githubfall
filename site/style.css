@@ -30,6 +30,8 @@ body {
   top: 0px;
   position: absolute;
   margin-left: 5px;
+  z-index: 200;
+  background: inherit;
 }
 
 h1 {
@@ -137,11 +139,12 @@ h1.title {
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 100;
 }
 
 @-webkit-keyframes fade {
-  0%   { opacity: 1; }
-  100% { opacity: 0; }
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 @-webkit-keyframes fall {
@@ -164,7 +167,7 @@ h1.title {
   -webkit-animation-name: fall, fade;     
   -webkit-animation-iteration-count: 1; /* use 0 to infinite */
   -webkit-animation-direction: normal; /* default is normal. use 'alternate' to reverse direction */
-  -webkit-animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-in-out;
 }
 
 .matrix span {

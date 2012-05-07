@@ -63,7 +63,7 @@
     Bucket.prototype = {
       add: function(event) {
         var html = this.createEventHtml(event);
-        this.dropCommit(event.language, event.payload.commits);
+        this.dropCommit(event.language, event);
         this.events.push(event);
         this.element.append(html);
         this.highlightItem(html);
@@ -71,24 +71,26 @@
         hammer.element = html;
         hammer.ontap = onElementSelected;
       },
-      dropCommit: function(language, commits) {
+      dropCommit: function(language, event) {
         if (!$.browser.webkit) return;
 
         var fallContainer = $('#' + language + 'Fall');
-        var fallHtml = '';
+        var fallHtml = $('<div/>');
 
-        for(var i in commits) {
-          var commit = commits[i];
-          var commitHtml = $('<span/>').text(commit.message);
+        for(var i in event.payload.commits) {
+          var commit = event.payload.commits[i];
+          var commitHtml = $('<p/>').text(commit.message);
 
-          fallHtml += commitHtml.html();
+          fallHtml.append(commitHtml);
         }
       
         if (fallHtml.length < 1) return;
 
         setTimeout(function() {
           $(fallContainer)
-          .prepend($('<div/>').append(fallHtml));
+          .prepend(
+            fallHtml.prepend($('<span/>').text(event.repo.name))
+          );
         }, 1000);
 
         $(fallContainer)
@@ -219,8 +221,6 @@
         var scaleDifference = lastScale - scale;
         if(Math.abs(scaleDifference) < 0.001) return;
 
-        $('.matrix').css({'-webkit-animation-duration': '0.5s'});
-        
         lastScale = scale;
         container.css({
           '-webkit-transform': 'scale(' + scale + ')',
