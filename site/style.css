@@ -136,7 +136,6 @@ h1.title {
   left: 0;
   top: 0;
   width: 600px;
-  height: 2800px;
   z-index: 100;
 }
 
@@ -146,7 +145,7 @@ h1.title {
 }
 
 @-webkit-keyframes fall {
-  from { top: -600px; }
+  from { top: 0px; }
   to  { top: 2800px; }
 }
 
@@ -168,7 +167,7 @@ h1.title {
   -webkit-animation-name: fall, fade;
   -webkit-animation-iteration-count: 1; 
   -webkit-animation-direction: normal;
-  -webkit-animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-in-out;
 }
 
 .matrix span.high {
