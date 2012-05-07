@@ -72,6 +72,8 @@
         hammer.ontap = onElementSelected;
       },
       dropCommit: function(language, commits) {
+        if (!$.browser.webkit) return;
+
         var fallContainer = $('#' + language + 'Fall');
         var fallHtml = '';
 
@@ -81,9 +83,18 @@
 
           fallHtml += commitHtml.html();
         }
-        
+      
+        if (fallHtml.length < 1) return;
+
+        setTimeout(function() {
+          $(fallContainer)
+          .prepend($('<div/>').append(fallHtml));
+        }, 1000);
+
         $(fallContainer)
-          .append($('<div/>').prepend(fallHtml));
+          .find('div')
+          .slice(1)
+          .remove();
       },
       count: function() {
         return this.events.length;
@@ -136,12 +147,16 @@
                    );
 
       $('#container')
-        .append(bucket)
-        .append($('<div/>')
-         .attr('id', language + 'Fall')
-         .css({left: bucketCount * BUCKET_WIDTH + 'px'})
-         .addClass('matrix'));
-      
+        .append(bucket);
+
+      if ($.browser.webkit) {
+        $('#container')
+          .append($('<div/>')
+           .attr('id', language + 'Fall')
+           .css({left: bucketCount * BUCKET_WIDTH + 'px'})
+           .addClass('matrix'));
+      }
+
       bucket = new Bucket(bucket);      
       buckets[language] = bucket;
       bucketCount++;
@@ -206,14 +221,11 @@
 
         $('.matrix').css({'-webkit-animation-duration': '0.5s'});
         
-        setTimeout(function() {
-          $('.matrix').html('');
-          lastScale = scale;
-          container.css({
-            '-webkit-transform': 'scale(' + scale + ')',
-            '-moz-transform': 'scale(' + scale + ')',
-          }); 
-        }, 500);
+        lastScale = scale;
+        container.css({
+          '-webkit-transform': 'scale(' + scale + ')',
+          '-moz-transform': 'scale(' + scale + ')',
+        }); 
       };
 
       setInterval(recalculateScale, 500);
