@@ -25,13 +25,12 @@ body {
 }
 
 .bucket {
-  height: 100%;
   width: 600px;
   top: 0px;
   position: absolute;
   margin-left: 5px;
   z-index: 200;
-  background: inherit;
+  background-color: #181907;
 }
 
 h1 {
