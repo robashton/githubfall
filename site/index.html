@@ -8,6 +8,7 @@
     <script type="text/javascript">
 
     var BUCKET_WIDTH = 600;
+    var FALL_WIDTH = 60;
     var lastScale = 1.0;
     var selectedItem = null;
     var mouseIsInside = false;
@@ -76,6 +77,7 @@
 
         var fallContainer = $('#' + language + 'Fall');
         var fallHtml = $('<div/>');
+             //           .css({left: FALL_WIDTH * fallContainer.find('div').size()});;
 
         for(var i in event.payload.commits) {
           var commit = event.payload.commits[i];
@@ -86,16 +88,16 @@
       
         if (fallHtml.length < 1) return;
 
-        setTimeout(function() {
-          $(fallContainer)
+        $(fallContainer)
           .prepend(
-            fallHtml.prepend($('<span/>').text(event.repo.name))
+            fallHtml
+              .css({left: FALL_WIDTH * fallContainer.find('div').size()})
+              .prepend($('<span/>').text(event.repo.name))
           );
-        }, 1000);
 
         $(fallContainer)
           .find('div')
-          .slice(2)
+          .slice(10)
           .remove();
       },
       count: function() {

@@ -152,20 +152,20 @@ h1.title {
 
 .matrix div {
   position: relative;
-  float: left;
+  float: left; /* float doesn't work when roated, arse! Will need to hack in JS */
   margin-left: 50px;
   font-size: 2.8em;
-  height: 100px;
+  height: 60px;
   width: 600px;
   overflow: hidden;
   opacity: 0;
 
   -webkit-animation-duration: 12s;
   -webkit-transform-origin: 0%;
-  -webkit-transform: rotate(270deg); 
-                                 
+  -webkit-transform: rotate(270deg);
+
   /* animation */
-  -webkit-animation-name: fall, fade;     
+  -webkit-animation-name: fall, fade;
   -webkit-animation-iteration-count: 1; 
   -webkit-animation-direction: normal;
   -webkit-animation-timing-function: ease-out;
