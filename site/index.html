@@ -95,7 +95,7 @@
 
         $(fallContainer)
           .find('div')
-          .slice(1)
+          .slice(2)
           .remove();
       },
       count: function() {
@@ -177,7 +177,7 @@
     $(document).ready(function(){
       var socket = io.connect();
       socket.on('push', appendItemToDocument);
-    
+
       $('#event-display').hover(function(){ 
         mouseIsInside=true; 
       }, function(){
