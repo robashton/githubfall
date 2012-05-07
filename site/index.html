@@ -26,7 +26,7 @@
 
       var display = $('#event-display');
       var event = element.data('event');
-
+      
       display.css({
         left: (x - 20) + 'px',
         top: (y - 20) + 'px'
@@ -63,12 +63,27 @@
     Bucket.prototype = {
       add: function(event) {
         var html = this.createEventHtml(event);
+        this.dropCommit(event.language, event.payload.commits);
         this.events.push(event);
         this.element.append(html);
         this.highlightItem(html);
         var hammer = new Hammer(html.get(0));
         hammer.element = html;
         hammer.ontap = onElementSelected;
+      },
+      dropCommit: function(language, commits) {
+        var fallContainer = $('#' + language + 'Fall');
+        var fallHtml = '';
+
+        for(var i in commits) {
+          var commit = commits[i];
+          var commitHtml = $('<span/>').text(commit.message);
+
+          fallHtml += commitHtml.html();
+        }
+        
+        $(fallContainer)
+          .append($('<div/>').prepend(fallHtml));
       },
       count: function() {
         return this.events.length;
@@ -87,7 +102,9 @@
                         .addClass('author')
                           .append($('<img/>').attr('src', data.actor.avatar_url))
                       );
+        
         element.data('event', data);
+
         return element;
       },
       highlightItem: function(html) {
@@ -118,7 +135,13 @@
                        .text(language)
                    );
 
-      $('#container').append(bucket);
+      $('#container')
+        .append(bucket)
+        .append($('<div/>')
+         .attr('id', language + 'Fall')
+         .css({left: bucketCount * BUCKET_WIDTH + 'px'})
+         .addClass('matrix'));
+      
       bucket = new Bucket(bucket);      
       buckets[language] = bucket;
       bucketCount++;
@@ -181,11 +204,16 @@
         var scaleDifference = lastScale - scale;
         if(Math.abs(scaleDifference) < 0.001) return;
 
-        lastScale = scale;
-        container.css({
-          '-webkit-transform': 'scale(' + scale + ')',
-          '-moz-transform': 'scale(' + scale + ')',
-        }); 
+        $('.matrix').css({'-webkit-animation-duration': '0.5s'});
+        
+        setTimeout(function() {
+          $('.matrix').html('');
+          lastScale = scale;
+          container.css({
+            '-webkit-transform': 'scale(' + scale + ')',
+            '-moz-transform': 'scale(' + scale + ')',
+          }); 
+        }, 500);
       };
 
       setInterval(recalculateScale, 500);
