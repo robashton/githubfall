@@ -81,17 +81,29 @@
         for(var i in event.payload.commits) {
           fallText += event.payload.commits[i].message;
         }
-      
+    
+        var containerMax = Math.floor(BUCKET_WIDTH / FALL_WIDTH) - 1;
+        var containerDivs = fallContainer.find('div');
+        var containerCount = containerDivs.size();
+        var leftPos = (FALL_WIDTH * containerCount) + 'px';
+
+        if (containerCount >= containerMax)
+        {
+          leftPos = $(containerDivs)
+                    .slice(containerCount - 1)
+                    .css('left');
+        }
+
         $(fallContainer)
           .prepend(
             $('<div />')
-              .css({left: FALL_WIDTH * fallContainer.find('div').size()})
+              .css({left: leftPos})
               .html('<span class="high">' + event.repo.name + '</span> ' + fallText.replace(/[\\r\\n]/g, " "))
           );
 
         $(fallContainer)
           .find('div')
-          .slice(10)
+          .slice(containerMax)
           .remove();
       },
       count: function() {
