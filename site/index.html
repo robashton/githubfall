@@ -213,13 +213,6 @@
         mouseIsInside=false;
       });
 
-      $('body').bind('keydown',function(e) {
-        if (e.which === FALL_KEY)
-          activateFall();
-      }).bind('keyup',function() {
-        deactivateFall();
-      });
-
       var bodyHammer = new Hammer(document.body);
 
       bodyHammer.ontap = function() {
@@ -227,13 +220,23 @@
           hideEvent();
       };
 
-      bodyHammer.onhold = function() {
-        activateFall();
-      };
+      if ($.browser.webkit) {
+        $('#hint').show();
 
-      bodyHammer.onrelease = function ()
-      {
-        deactivateFall();
+        $('body').bind('keydown',function(e) {
+          if (e.which === FALL_KEY)
+           activateFall();
+        }).bind('keyup',function() {
+         deactivateFall();
+        });
+
+        bodyHammer.onhold = function() {
+          activateFall();
+        };
+    
+        bodyHammer.onrelease = function () {
+          deactivateFall();
+        };
       }
     });
 
@@ -291,7 +294,7 @@
     </script>
   </head>
   <body>
-    <h4><strong>Hint:</strong> Hold CTRL or TOUCH to show commit drop-fall</h4>
+    <h4 id="hint"><strong>Hint:</strong> Hold CTRL or TOUCH to show commit drop-fall</h4>
     <h1 class="title">Github Live</h1>
     <div class="clear" />
 
