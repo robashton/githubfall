@@ -8,9 +8,30 @@
     <script type="text/javascript">
 
     var BUCKET_WIDTH = 600;
+    var FALL_WIDTH = 60;
+    var FALL_KEY = 17;
+    var FALL_TIMER = 12000;
+
     var lastScale = 1.0;
     var selectedItem = null;
     var mouseIsInside = false;
+    var fallActive  = false;
+    var keyTimer = null;
+
+    var deactivateFall = function() {
+      fallActive = false;
+      
+      keyTimer = setTimeout(function() {
+        $('.matrix div').remove();
+      }, FALL_TIMER);
+    }
+
+    var activateFall = function() {
+      fallActive = true;
+
+      if (keyTimer)
+        cancelTimeout(keyTimer);
+    }
 
     var hideEvent = function() {
       mouseIsInside = false;
@@ -26,7 +47,7 @@
 
       var display = $('#event-display');
       var event = element.data('event');
-
+      
       display.css({
         left: (x - 20) + 'px',
         top: (y - 20) + 'px'
@@ -63,12 +84,48 @@
     Bucket.prototype = {
       add: function(event) {
         var html = this.createEventHtml(event);
+        this.dropCommit(event.language, event);
         this.events.push(event);
         this.element.append(html);
         this.highlightItem(html);
         var hammer = new Hammer(html.get(0));
         hammer.element = html;
         hammer.ontap = onElementSelected;
+      },
+      dropCommit: function(language, event) {
+        if (!$.browser.webkit) return;
+        if (!fallActive) return;
+
+        var fallContainer = $('#' + language + 'Fall');
+        var fallText = '';
+        
+        for(var i in event.payload.commits) {
+          fallText += event.payload.commits[i].message;
+        }
+    
+        var containerMax = Math.floor(BUCKET_WIDTH / FALL_WIDTH) - 2;
+        var containerDivs = fallContainer.find('div');
+        var containerCount = containerDivs.size();
+        var leftPos = (FALL_WIDTH * containerCount) + 'px';
+
+        if (containerCount >= containerMax)
+        {
+          leftPos = $(containerDivs)
+                    .slice(containerCount - 1)
+                    .css('left');
+        }
+
+        $(fallContainer)
+          .prepend(
+            $('<div />')
+              .css({left: leftPos})
+              .html('<span class="high">' + event.repo.name + '</span> ' + fallText.replace(/[\\r\\n]/g, " "))
+          );
+
+        $(fallContainer)
+          .find('div')
+          .slice(containerMax)
+          .remove();
       },
       count: function() {
         return this.events.length;
@@ -87,7 +144,9 @@
                         .addClass('author')
                           .append($('<img/>').attr('src', data.actor.avatar_url))
                       );
+        
         element.data('event', data);
+
         return element;
       },
       highlightItem: function(html) {
@@ -118,7 +177,17 @@
                        .text(language)
                    );
 
-      $('#container').append(bucket);
+      $('#container')
+        .append(bucket);
+
+      if ($.browser.webkit) {
+        $('#container')
+          .append($('<div/>')
+           .attr('id', language + 'Fall')
+           .css({left: bucketCount * BUCKET_WIDTH + 'px'})
+           .addClass('matrix'));
+      }
+
       bucket = new Bucket(bucket);      
       buckets[language] = bucket;
       bucketCount++;
@@ -137,7 +206,7 @@
     $(document).ready(function(){
       var socket = io.connect();
       socket.on('push', appendItemToDocument);
-    
+
       $('#event-display').hover(function(){ 
         mouseIsInside=true; 
       }, function(){
@@ -145,10 +214,30 @@
       });
 
       var bodyHammer = new Hammer(document.body);
+
       bodyHammer.ontap = function() {
         if (!mouseIsInside)
           hideEvent();
       };
+
+      if ($.browser.webkit) {
+        $('#hint').show();
+
+        $('body').bind('keydown',function(e) {
+          if (e.which === FALL_KEY)
+           activateFall();
+        }).bind('keyup',function() {
+         deactivateFall();
+        });
+
+        bodyHammer.onhold = function() {
+          activateFall();
+        };
+    
+        bodyHammer.onrelease = function () {
+          deactivateFall();
+        };
+      }
     });
 
      var recalculateScale = function() {
@@ -205,7 +294,10 @@
     </script>
   </head>
   <body>
+    <h4 id="hint"><strong>Hint:</strong> Hold CTRL or TOUCH to show commit drop-fall</h4>
     <h1 class="title">Github Live</h1>
+    <div class="clear" />
+
     <div id="outerContainer">
       <div id="container">
 

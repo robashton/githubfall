@@ -78,7 +78,7 @@ var processEvent = function(event) {
     overlapped = true;
     return;
   }
-  console.log('Processing event', event.created_at);
+  console.log('Processing event', event.created_at, ':', event.type);
   last_created_at = event.created_at;
   var handler = eventHandlers[event.type];
   if(!handler) return;

@@ -26,9 +26,10 @@ body {
 
 .bucket {
   width: 600px;
-  margin-left: 30px;
   top: 0px;
   position: absolute;
+  margin-left: 5px;
+  z-index: 200;
 }
 
 h1 {
@@ -41,6 +42,19 @@ h1.title {
   text-shadow: 0 0 3px #F3F781;
 }
 
+h4 {
+  color: #ccc;
+  font-weight: normal;
+  float: right;
+  margin-top: 0;
+  font-size: 0.8em;
+  display: none;
+}
+
+.clear {
+  clear: both;
+}
+
 .bucket h1 {
   font-size: 100px;
   margin-top: 0;
@@ -49,6 +63,7 @@ h1.title {
 .bucket div {
   float: left;
   padding: 0 10px 10px 0;
+  background-color: #181907;
 }
 
 .bucket img {
@@ -125,4 +140,50 @@ h1.title {
 
 #event-display a:hover {
   text-decoration: underline;
+}
+
+.matrix {
+  color: rgba(0, 255, 0, .4);
+  text-shadow: rgba(255, 255, 255, .8) 0px 0px 4px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 600px;
+  z-index: 100;
+}
+
+@-webkit-keyframes fade {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-webkit-keyframes fall {
+  from { top: 0px; }
+  to  { top: 2800px; }
+}
+
+.matrix div {
+  position: relative;
+  float: left; /* float doesn't work when roated, arse! Will need to hack in JS */
+  margin-left: 50px;
+  font-size: 2.8em;
+  height: 60px;
+  width: 600px;
+  overflow: hidden;
+  opacity: 0;
+
+  -webkit-animation-duration: 12s;
+  -webkit-transform-origin: 0%;
+  -webkit-transform: rotate(270deg);
+
+  /* animation */
+  -webkit-animation-name: fall, fade;
+  -webkit-animation-iteration-count: 1; 
+  -webkit-animation-direction: normal;
+  -webkit-animation-timing-function: ease-in-out;
+}
+
+.matrix span.high {
+  color: rgb(0, 255, 0);
+  text-shadow: rgb(255, 255, 255) 0px 0px 5px;
 }
