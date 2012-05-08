@@ -42,6 +42,18 @@ h1.title {
   text-shadow: 0 0 3px #F3F781;
 }
 
+h4 {
+  color: #ccc;
+  font-weight: normal;
+  float: right;
+  margin-top: 0;
+  font-size: 0.8em;
+}
+
+.clear {
+  clear: both;
+}
+
 .bucket h1 {
   font-size: 100px;
   margin-top: 0;
