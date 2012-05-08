@@ -9,9 +9,29 @@
 
     var BUCKET_WIDTH = 600;
     var FALL_WIDTH = 60;
+    var FALL_KEY = 17;
+    var FALL_TIMER = 12000;
+
     var lastScale = 1.0;
     var selectedItem = null;
     var mouseIsInside = false;
+    var fallActive  = false;
+    var keyTimer = null;
+
+    var deactivateFall = function() {
+      fallActive = false;
+      
+      keyTimer = setTimeout(function() {
+        $('.matrix div').remove();
+      }, FALL_TIMER);
+    }
+
+    var activateFall = function() {
+      fallActive = true;
+
+      if (keyTimer)
+        cancelTimeout(keyTimer);
+    }
 
     var hideEvent = function() {
       mouseIsInside = false;
@@ -74,6 +94,7 @@
       },
       dropCommit: function(language, event) {
         if (!$.browser.webkit) return;
+        if (!fallActive) return;
 
         var fallContainer = $('#' + language + 'Fall');
         var fallText = '';
@@ -192,11 +213,28 @@
         mouseIsInside=false;
       });
 
+      $('body').bind('keydown',function(e) {
+        if (e.which === FALL_KEY)
+          activateFall();
+      }).bind('keyup',function() {
+        deactivateFall();
+      });
+
       var bodyHammer = new Hammer(document.body);
+
       bodyHammer.ontap = function() {
         if (!mouseIsInside)
           hideEvent();
       };
+
+      bodyHammer.onhold = function() {
+        activateFall();
+      };
+
+      bodyHammer.onrelease = function ()
+      {
+        deactivateFall();
+      }
     });
 
      var recalculateScale = function() {
