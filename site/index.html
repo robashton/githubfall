@@ -27,12 +27,10 @@
     }
 
     var activateFall = function() {
-      if (fallActive) return;
-
       fallActive = true;
 
       if (keyTimer)
-        cancelTimeout(keyTimer);
+        clearTimeout(keyTimer);
     }
 
     var hideEvent = function() {

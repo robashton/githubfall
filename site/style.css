@@ -58,6 +58,7 @@ h4 {
 .bucket h1 {
   font-size: 100px;
   margin-top: 0;
+  background-color: #181907;
 }
 
 .bucket div {
@@ -169,7 +170,7 @@ h4 {
   overflow: hidden;
   opacity: 0;
 
-  -webkit-animation-duration: 8s;
+  -webkit-animation-duration: 12s;
   -webkit-transform-origin: 0%;
   -webkit-transform: rotate(270deg);
 
