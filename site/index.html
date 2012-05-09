@@ -27,6 +27,8 @@
     }
 
     var activateFall = function() {
+      if (fallActive) return;
+
       fallActive = true;
 
       if (keyTimer)

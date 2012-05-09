@@ -146,8 +146,6 @@ h4 {
   color: rgba(0, 255, 0, .4);
   text-shadow: rgba(255, 255, 255, .8) 0px 0px 4px;
   position: absolute;
-  left: 0;
-  top: 0;
   width: 600px;
   z-index: 100;
 }
@@ -158,26 +156,25 @@ h4 {
 }
 
 @-webkit-keyframes fall {
-  from { top: 0px; }
-  to  { top: 2800px; }
+  from { bottom: 0; }
+  to  { bottom: -7200px; }
 }
 
 .matrix div {
-  position: relative;
-  float: left; /* float doesn't work when roated, arse! Will need to hack in JS */
+  position: absolute;
   margin-left: 50px;
   font-size: 2.8em;
   height: 60px;
-  width: 600px;
+  width: 2800px;
   overflow: hidden;
   opacity: 0;
 
-  -webkit-animation-duration: 12s;
+  -webkit-animation-duration: 8s;
   -webkit-transform-origin: 0%;
   -webkit-transform: rotate(270deg);
 
   /* animation */
-  -webkit-animation-name: fall, fade;
+  -webkit-animation-name: fall,fade;
   -webkit-animation-iteration-count: 1; 
   -webkit-animation-direction: normal;
   -webkit-animation-timing-function: ease-in-out;
