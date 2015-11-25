@@ -20,9 +20,6 @@ var server = http.createServer(function(req, res) {
 });
 
 var io = socketio.listen(server);
-io.configure({
-  'log level': 0
-});
 server.listen(PORT);
 
 var eventQueue = [];
@@ -40,7 +37,7 @@ var updateTimers = function() {
 }
 
 var fetchRepoInfo = function(name, cb) {
- var request = https.get({ host: 'api.github.com', path: '/repos/' + name}, function(res) {
+ var request = https.get({ host: 'api.github.com', path: '/repos/' + name, headers: { 'User-Agent': 'GitHub-Api-Fall' } }, function(res) {
     var data = '';
     res.on('data', function (chunk) {
       data += chunk;
@@ -94,7 +91,7 @@ var processData = function(data) {
 };
 
 var downloadEvents = function() {
- var request = https.get({ host: 'api.github.com', path: '/events'}, function(res) {
+ var request = https.get({ host: 'api.github.com', path: '/events', headers: { 'User-Agent': 'GitHub-Api-Fall' } }, function(res) {
     var data = '';
     res.on('data', function (chunk) {
       data += chunk;
